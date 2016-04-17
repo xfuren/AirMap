@@ -1,5 +1,5 @@
 application: taiwan-airmap
-version: 1
+version: 1-1
 runtime: php55
 api_version: 1
 threadsafe: yes
@@ -20,8 +20,8 @@ handlers:
   static_files: static/\1
   upload: static/(.*\.json)
 
-
-
+- url: /site
+  script: public/site.php
 
 - url: /.*
   script: public/map.php
