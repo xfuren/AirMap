@@ -1,38 +1,68 @@
 <?php
 date_default_timezone_set('Asia/Taipei');
 
-$prefix = "http://g0vairmap.3203.info/Data/";
+$memcache = new Memcached;
+$memcacheKeyPrefix = 'nGVA2HhYph5i1b8Byx8642Gw4s3ug1li';
+$memcacheExpireSecs = 5 * 60; //5 mins
 
-$sources = [
-	"ProbeCube_last.json",
-	"EPA_last.json",
-	"LASS_last.json",
-	"Indie_last.json",
-	"Airbox_last.json",
-	"webduino_last.json",
-];	
+$jsonType = call_user_func(function(){
+	$matches = [];
+	preg_match("/\/([a-zA-Z]+).json/", $_SERVER['REQUEST_URI'], $matches);
+	return isset($matches[1]) ? $matches[1] : null;
+});
 
-
-$sites = [];
-foreach($sources as $source){
-	$url = $prefix . $source;
-
-	$response = file_get_contents($url);
-	$data = json_decode($response, true);
-
-	if( !is_array($data) || !count($data) ){
-		continue;
-	}
-
-	foreach($data as $item){
-		if( filterCreateAt($item['Data']['Create_at']) ){
-			$sites[] = $item;
-		}
-	}
+$sites = $memcache->get($memcacheKeyPrefix . $jsonType);
+if( $sites === false ){
+	$sites = fetchRemote($jsonType);
+	$memcache->set($memcacheKeyPrefix . $jsonType, json_encode($sites), $memcacheExpireSecs);
 }
 
 setExpire();
 jsonResponse($sites);
+
+
+function fetchRemote($jsonType){
+	$prefix = "http://g0vairmap.3203.info/Data/";
+
+	$sources = [
+		"ProbeCube_last.json",
+		"EPA_last.json",
+		"LASS_last.json",
+		"Indie_last.json",
+		"Airbox_last.json",
+		"webduino_last.json",
+	];	
+
+
+	$sites = [];
+	foreach($sources as $source){
+		$url = $prefix . $source;
+
+		$response = file_get_contents($url);
+		$data = json_decode($response, true);
+
+		if( !is_array($data) || !count($data) ){
+			continue;
+		}
+
+		foreach($data as $item){
+			if( !isset($item['Data']['Create_at']) ){ continue; }
+			
+			$valid = filterCreateAt($item['Data']['Create_at']);
+
+			if( $jsonType == 'airmap' && $valid ){
+				$sites[] = $item;
+			}
+
+			if( $jsonType == 'outofdate' && !$valid ){
+				$sites[] = $item;
+			}
+		}
+	}
+
+	return $sites;
+}
+
 
 function filterCreateAt($timeStr){
 	if( !strlen($timeStr) ){ return false; }
