@@ -5,6 +5,13 @@ api_version: 1
 threadsafe: yes
 
 handlers:
+- url: /favicon.ico
+  static_files: favicon.ico
+  upload: favicon\.ico
+- url: /favicon.png
+  static_files: favicon.png
+  upload: favicon\.png
+
 - url: /assets
   static_dir: assets
 
@@ -14,7 +21,7 @@ handlers:
 
 - url: /json/airmap\.json
   script: public/g0vAirmapJson.php
-- url: /json/outofdate\.json
+- url: /json/deactivesite\.json
   script: public/g0vAirmapJson.php
 
 - url: /json/(.*\.json)
@@ -22,10 +29,7 @@ handlers:
   static_files: static/\1
   upload: static/(.*\.json)
 
-
 - url: /site
-  script: public/site.php
-- url: /expire
   script: public/site.php
 
 - url: /.*
