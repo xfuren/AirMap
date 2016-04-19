@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title></title>
+		<title>AirMap Site List</title>
 
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css">
 		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.1/bootstrap-table.min.css">
@@ -18,7 +18,11 @@
 	</head>
 	<body>
 		<div class="container">
-			<h1>AirMap Site List</h1>
+			<h1>AirMap Site List
+				<a href='/' class="btn btn-success">Map</a>
+				<a href='/site' class="btn btn-primary">Site List</a>
+				<a href='/expire' class="btn btn-warning">Expired Site</a>
+			</h1>
 			<div class="row">
 				<div id="toolbar" class="">
 					<div class="form-inline" role="form">
@@ -34,17 +38,30 @@
 					   data-search="true" 
 					   data-toggle="table" data-detail-view="true" 
 					   data-detail-formatter="bsTable.formatter.detail" 
-					   data-url="json/airmap.json">
+					   >
 					<thead>
 						<tr>
+							<th data-formatter="bsTable.formatter.sn">#</th>
 							<th data-field="SiteGroup" data-sortable="true">Site Group</th>
-							<th data-field="SiteName" data-sortable="true" data-searchable="true">Site Name</th>
+							<th data-field="SiteName" data-sortable="true" data-searchable="true" data-formatter="bsTable.formatter.siteName">Site Name</th>
 							<th data-field="Maker" data-sortable="true" data-searchable="true">Maker</th>
 							<th data-field="LatLng" data-sortable="true" data-formatter="bsTable.formatter.location">Location</th>
 							<th data-field="Data.Create_at" data-sortable="true" data-formatter="bsTable.formatter.updateTime">Update Time</th>
 						</tr>
 					</thead>
 				</table>
+			</div>
+
+			<hr>
+
+			<div id="footer" class="well well-sm">
+				DataSource: http://g0vairmap.3203.info/Data/
+				<code>ProbeCube_last.json</code>,
+				<code>EPA_last.json</code>,
+				<code>LASS_last.json</code>,
+				<code>Indie_last.json</code>,
+				<code>Airbox_last.json</code>,
+				<code>webduino_last.json</code>
 			</div>
 		</div>
 		
@@ -55,13 +72,38 @@
  		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.12.0/moment.min.js"></script>
  		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.12.0/locale/zh-tw.js"></script>
 		<script>
-		$('#table').on('load-success.bs.table', function(e, data){
-			bsTable.event.loadSiteGroup(data);
-			bsTable.event.search();
+		moment.updateLocale('zh-tw', {
+			relativeTime: {
+				m : '1分鐘',
+				h : '1小時',
+				d : '1天',
+				M : '1個月',
+				y : '1年',
+			}
+		});
+
+		$(function(){
+			// siteName hashtag
+			var siteName = window.location.hash.substr(1);
+			if(siteName){
+				siteName = decodeURIComponent(siteName);
+				bsTable.event.filter('SiteName', siteName);
+			}
+
+			var action = location.pathname.substr(1);
+			var dataSource = {
+				site: 'json/airmap.json',
+				expire: 'json/outofdate.json',
+			}
+			bsTable.event.loadData(dataSource[action]);
+
 		});
 
 		var bsTable = {
 			formatter: {
+				sn: function(value, row, index){
+					return 1+index;
+				},
 				location: function(value, row, index){
 					var url = "https://www.google.com.tw/maps/place/" + value.lat + ',' + value.lng;
 					var text = [value.lat, value.lng].join(', ');
@@ -81,6 +123,10 @@
 					var human = moment(time).fromNow();
 					var dataTime = moment(time).format('YYYY-MM-DD HH:mm');
 					return human + ' (' + dataTime + ')';
+				},
+				siteName: function(name){
+					var url = "/site#" + name;
+					return "<a href='" + url + "' target='_blank'>" + name + "</a>";
 				}
 			},
 			generate: {
@@ -142,16 +188,16 @@
 						bsTable.event.filter('SiteGroup', filterValue);
 					});
 				},
-				search: function(){
-					$("input[name=search]").keyup(function(){
-						var text = $(this).val();
-						
-						var filterValue = null;
-						if( text.length ){
-							filterValue = text;
-						}
+				loadData: function(url){
+					if(!url){ return false; }
 
-						bsTable.event.filter('SiteGroup', filterValue);
+					$table = $("#table");
+
+					$table.bootstrapTable('showLoading');
+					$.getJSON(url, function(data){
+						$table.bootstrapTable('load', data);
+						bsTable.event.loadSiteGroup(data);
+						$table.bootstrapTable('hideLoading');
 					});
 				},
 				filter: function(key, value){
