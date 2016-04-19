@@ -125,7 +125,7 @@
 					return human + ' (' + dataTime + ')';
 				},
 				siteName: function(name){
-					var url = "/site#" + name;
+					var url = window.location.hash + "#" + name;
 					return "<a href='" + url + "' target='_blank'>" + name + "</a>";
 				}
 			},
