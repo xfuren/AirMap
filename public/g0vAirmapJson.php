@@ -54,7 +54,7 @@ function fetchRemote($jsonType){
 				$sites[] = $item;
 			}
 
-			if( $jsonType == 'outofdate' && !$valid ){
+			if( $jsonType == 'deactivesite' && !$valid ){
 				$sites[] = $item;
 			}
 		}
