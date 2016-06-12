@@ -3,11 +3,12 @@ var DataSource = {
 	autoUpdateTS: null,
 	autoUpdateIntervalms: 5 * 60 * 1000,
 	sources: [
-		// 'Data/EPA_last.json',
-		// 'Data/Indie_last.json',
-		// 'Data/LASS_last.json',
-		// 'Data/ProbeCube_last.json',
 		"/json/airmap.json",
+		// "http://asper.tw/airmap/airbox.json",
+		// "http://asper.tw/airmap/epa.json",
+		// "http://asper.tw/airmap/lass.json",
+		// "http://asper.tw/airmap/probecube.json",
+		// "http://asper.tw/airmap/webduino.json",
 		// "https://taqm.firebaseio.com/lastest.json?callback=?",
 	],
 	boot: function(){
@@ -21,13 +22,6 @@ var DataSource = {
 	},
 	load: function(source){
 		$.getJSON(source).done(function(data){
-			//siteMarker.addToMapManager(data);
-
-			// data.map(function(item){
-			// 	 siteMarker.add(item);
-			// 	// areaDisplay.add(item);
-			// });
-
 			$(Map.getMapElement()).trigger("dataSourceLoadCompelete", [source, data]);
 		});	
 	},

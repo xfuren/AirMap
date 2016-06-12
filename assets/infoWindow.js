@@ -8,13 +8,14 @@ var InfoWindow = {
 			this.bindEvent();
 		}
 	},
-	putOn: function(Site){
+	putOn: function(Site, position){
 		this.boot();
-		this.item = Site;
+		this.item = Site;		
 
 		var content = this.getContent();
+		var position = position || Site.getPosition();
 		this.instance.setContent(content);
-		this.instance.setPosition(Site.getPosition());
+		this.instance.setPosition(position);
 		this.instance.open(Map.getMapInstance());
 	},
 	bindEvent: function(){

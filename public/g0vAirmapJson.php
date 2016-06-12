@@ -26,7 +26,7 @@ function fetchRemote($jsonType){
 
 	$sources = [
 		"ProbeCube_last.json",
-		"EPA_last.json",
+		// "EPA_last.json",
 		"LASS_last.json",
 		"Indie_last.json",
 		"Airbox_last.json",

@@ -1,17 +1,33 @@
 #levelIndicatorLevel{
 	position:absolute;
-	bottom:5.5em; left:25px;
+	bottom:4.5em; 
+	left:0.5em;
 	z-index:2;
 	
 	height: 2em;
 	text-align: center;
 	line-height: 2em;
-	font-size: 1em;
+	font-size: 0.8em;
 }
-	#levelIndicatorLevel .type {
+	#levelIndicatorLevel .title{
 		display: inline-block;
-		height: 2em;
+		height: 1.8em;
+		vertical-align: bottom;
 		margin-right: 0.5em;
+	}
+
+	#levelIndicatorLevel .type {
+		/*display: inline-block;*/
+		line-height: 1em;		
+		font-size: 0.8em;
+	}
+
+	#levelIndicatorLevel .unit {
+		/*display: inline-block;*/
+		line-height: 1em;
+		font-style: italic;
+		font-size: 0.6em;
+		text-align: right;
 	}
 
 	#levelIndicatorLevel .levels {
@@ -19,43 +35,48 @@
 		display: inline-block;
 	}
 	
-	#levelIndicatorLevel .level:first-child::before {
+/*	#levelIndicatorLevel .level:first-child::before {
 		content: '<';
+		font-size: 0.8em;
 	}
 
 	#levelIndicatorLevel .level:last-child::before {
 		content: '>';
-	}
+		font-size: 0.8em;
+	}*/
 
 	#levelIndicatorLevel .levels > .level {
 		display: inline-block;
-		width: 2em;
-		height: 2em;
+		width: 1.8em;
+		height: 1.8em;
+		font-size:0.9em;
+		line-height: 1.8em;
 		background: red;
 		color: #fff;
-		text-shadow: 2px 2px 1px #333;
+		text-shadow: 1px 1px 2px #333, -1px -1px 2px #333, 
+		             1px -1px 2px #333, -1px 1px 2px #333;
 		box-shadow: 2px 2px 2px 0px rgba(51,51,51,0.75);
 	}
 
-	#levelIndicatorLevel .unit {
-		display: inline-block;
-		height: 2em;
-		margin-left: 0.5em;
-		font-style: italic;
-	}
 
-
-#indicateTypeSelector{
+.typeSelector{
 	position:absolute;
-	bottom:9em; left:20px;
 	z-index:2;
 
-	width: 8em;
+	width: 5em;
 	text-align: center;
 }
-	#indicateTypeSelector .btn{
-		margin-top:0.3em;
-		width: 8em;
+	.typeSelector > .btn{
+		padding: 5px;
+		width: 6em;
 		overflow: hidden;
-		opacity: 0.6;
+		opacity: 0.7;
 	}
+
+#indicateTypeSelector{
+	bottom:6em; left:0em;
+}
+
+#siteGroupSelector{
+	top:2.5em; left:0em;
+}

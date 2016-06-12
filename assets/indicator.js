@@ -7,7 +7,7 @@ var Indicator = {
 		'PM2.5': 'μg/m3',
 		'PM2.5_NASA': 'μg/m3',
 		'Temperature': '&#8451;',
-		'Humidity': '%;',
+		'Humidity': '%',
 	},
 	colors: {
 		'PM2.5': {
@@ -37,15 +37,27 @@ var Indicator = {
 			65: '#C90000',
 			80: '#800000',
 		},
+		'OLD_Temperature': {
+			5: '#225968',
+			10: '#B7DEE8',
+			15: '#77933C',
+			20: '#D7E4BD',
+			25: '#FAC090',
+			30: '#E46C0A',
+			35: '#FF0000',
+			40: '#800000',
+		},
 		'Temperature': {
-			0: '#225968',
-			5: '#B7DEE8',
-			10: '#77933C',
-			15: '#D7E4BD',
-			20: '#FAC090',
-			25: '#E46C0A',
-			30: '#FF0000',
-			35: '#800000',
+			5: '#6DB2CC',
+			11: '#B9E6F6',
+			15: '#4BAC66',
+			21: '#A8D784',
+			25: '#F0E389',
+			29: '#F1B040',
+			33: '#F55042',
+			35: '#B6023C',
+			37: '#9F66B5',
+			40: '#752B8E',
 		},
 		'Humidity': {
 			20: '#FAC090',
@@ -95,22 +107,23 @@ var Indicator = {
 			this.presentType = type;
 			this.generateLevelBar();
 
-			$(Map.getMapInstance()).trigger("indicatorTypeChange", [type]);
+			$(Map.getMapElement()).trigger("indicatorTypeChange", [type]);
 		}
 	},
 	getLevelColor: function(level){
 		var colors = this.colors[this.presentType];
 		var lastColorMaxValue = Object.keys(colors).pop();
-		
 		for(var maxValue in colors){
-			//last one is greater
-			if( maxValue == lastColorMaxValue && level > maxValue){
+			//console.log(level, maxValue);
+			if( level <= maxValue ){
 				return colors[maxValue];
 			}
 
-			if( level < maxValue ){
-				return colors[maxValue];
+			//level greater lastone level
+			if( level >= lastColorMaxValue){
+				return colors[lastColorMaxValue];
 			}
+
 		}
 	},
 	generateLevelBar: function(){
@@ -124,11 +137,14 @@ var Indicator = {
 		}
 
 		var html = [];
-		html.push('<div class="type"><b>' + type + '</b></div>');
+		
+		html.push('<div class="title">');
+		html.push('<div class="type">' + type + '</div>');
+		html.push('<div class="unit">' + unit + '</div>');
+		html.push('</div>');
 		html.push('<div class="levels">');
 		html.push(levels);
 		html.push('</div>');
-		html.push('<div class="unit">' + unit + '</div>');
 		
 		$(this.levelIndicatorContainerID).html(html.join(''));
 	}

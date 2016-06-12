@@ -4,9 +4,16 @@
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<meta property="og:title" content="Taiwan Air Quality Map">
+		<meta property="og:description" content="台灣空汙觀測地圖">
+		<meta property="og:type" content="website">
+		<meta property="og:url" content="http://airmap.g0v.asper.tw/">
+		<meta property="og:image" content="http://airmap.g0v.asper.tw/image/screenshot.png">
+
 		<title>Taiwan Air Quality Map</title>
-		<link rel='shortcut icon' type='image/x-icon' href='favicon.png' />
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+		<link rel='shortcut icon' type='image/x-icon' href='image/favicon.png' />
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css">
 		<link rel="stylesheet" href="assets/map.css">
 		<link rel="stylesheet" href="assets/infoPanel.css">
 		<link rel="stylesheet" href="assets/levelIndicatorLevel.css">
@@ -49,66 +56,101 @@
 
 			<div class="content">
 				<div class="site-header">
-					<div class="pull-left title">
-						<div class="siteName">[ProbeCube] 臺中市野生動物保育學會</div>
+					<div class="title">
+						<div class="siteGroup">LASS</div>
+						<div class="siteName">FT1_015</div>
 					</div>
-					<div class="pull-right measures">
+					<div class="measures">
 						<div class="measure pm25">
-							<div class="type">PM 2.5</div>
-							<div class="value-container">
-								<span class='value'>55</span>
-								<span class="unit">μg/m3</span>
-							</div>
+							<div class="header">
+								<div class="type">PM 2.5</div>
+							</div>							
+							<div class='value'>55</div>
 						</div>
 						<div class="measure humidity">
-							<div class="type">濕度</div>
-							<div class="value-container">
-								<span class='value'>55</span>
-								<span class="unit">%</span>
+							<div class="header">
+								<div class="type">濕度</div>
+								<div class="unit">%</div>
 							</div>
+							<div class='value'>55.55</div>
 						</div>
 						<div class="measure temperature">
-							<div class="type">溫度</div>
-							<div class="value-container">
-								<span class='value'>55</span>
-								<span class="unit">&#8451;</span>
+							<div class="header">
+								<div class="type">溫度</div>
+								<div class="unit">&#8451;</div>
 							</div>
+							<div class='value'>55.44</div>
 						</div>
-					</div>
-					<div class="clearfix"></div>
-				</div>
-
-				<div class='label-section'>
-					<div class="source">
-						<a href='#' target='_blank'><span class="label label-info">Source</span></a>
-					</div>
-					<div class="updateTime">
-						<span class="label label-success">更新時間</span>
-						<span class="time"></span>
 					</div>
 				</div>
 
-				<div class="detail-data">
-					<div class="template" style="display:none;">
-						<div class="measure">
-							<span class="type label label-primary"></span>
-							<span class="value"></span>
+				<div class="chart-section">
+					<canvas id="chart" width="800" height="300"></canvas>
+	
+					<div class="loading">						
+						<div class="spinner">
+							<div class="rect1"></div>
+							<div class="rect2"></div>
+							<div class="rect3"></div>
+							<div class="rect4"></div>
+							<div class="rect5"></div>
+						</div>
+					</div>
+				</div>
+
+				<div class='label-section clearfix'>
+					<div class="col-xs-6">
+						<a class="chart-datasource" target="_blank">
+							<span class="btn btn-darker btn-xs" title="Chart Datasource">
+								<span class="glyphicon glyphicon-hdd"></span>
+								<span class="visible-md-inline visible-lg-inline">Chart Json</span>
+							</span>
+						</a>
+						<div id="chart-control">
+							<span class="btn btn-darker btn-xs" data-range="Hourly" title="過去一小時歷史數值">
+								<span class="visible-xs-inline visible-sm-inline">H</span>
+								<span class="visible-md-inline visible-lg-inline">Hourly</span>
+							</span>
+
+							<span class="btn btn-darker btn-xs" data-range="Daily" title="過去一天歷史數值">
+								<span class="visible-xs-inline visible-sm-inline">D</span>
+								<span class="visible-md-inline visible-lg-inline">Daily</span>
+							</span>
+
+							<span class="btn btn-darker btn-xs" data-range="Weekly" title="過去一週歷史數值">
+								<span class="visible-xs-inline visible-sm-inline">W</span>
+								<span class="visible-md-inline visible-lg-inline">Weekly</span>
+							</span>
+
+							<span class="btn btn-darker btn-xs" data-range="Monthly" title="過去一個月歷史數值">
+								<span class="visible-xs-inline visible-sm-inline">M</span>
+								<span class="visible-md-inline visible-lg-inline">Monthly</span>
+							</span>
 						</div>
 					</div>
 
-					<div class="data-container">
-						<table class="table table-hover">
-						<tr class="Data">
-							<th class="head">觀測資料</th>
-							<td></td>
-						</tr>
-						<tr class="RawData">
-							<th class="head">原始資料</th>
-							<td></td>
-						</tr>
-						</table>
-					</div>
-				</div>	
+					<div class="col-xs-6 resource-label">
+						<div class="detail">
+							<a href='#' target='_blank' class="btn btn-darker btn-xs" title="站點詳細資訊">
+								<span class="glyphicon glyphicon-list-alt"></span>
+								<span class="visible-md-inline visible-lg-inline">Site Detail</span>
+							</a>
+						</div>
+						<div class="source">
+							<a href='#' target='_blank' class="btn btn-darker btn-xs" title="Site Json">
+								<span class="glyphicon glyphicon-hdd"></span>
+								<span class="visible-md-inline visible-lg-inline">Site Json</span>
+							</a>
+						</div>
+						<div class="updateTime">
+							<a href='#' target='_blank' class="btn btn-darker btn-xs">
+								<span class="glyphicon glyphicon-time"></span>
+								<span class="visible-md-inline visible-lg-inline">更新時間</span>
+								<span class="time visible-md-inline visible-lg-inline"></span>
+							</a>
+						</div>
+					</div>					
+				</div>				
 			</div>
 
 			<div class="announcement">
@@ -118,48 +160,95 @@
 			</div>
 		</div>
 
+		<div id="siteGroupSelector" class="typeSelector"></div>
+
 		<div id="levelIndicatorLevel"></div>
 
-		<div id="indicateTypeSelector"></div>
+		<div id="indicateTypeSelector" class="typeSelector"></div>
 		
 
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
  		<script src="http://maps.google.com/maps/api/js?key=AIzaSyBfhb3bOt_jBPFN2WDzkhX8k518Yc7CLBw"></script>
- 		<script src="https://google-maps-utility-library-v3.googlecode.com/svn-history/r391/trunk/markerwithlabel/src/markerwithlabel.js"></script>
  		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.12.0/moment.min.js"></script>
  		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.12.0/locale/zh-tw.js"></script>
- 		
+ 		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.0.1/Chart.bundle.js"></script>
+ 		<script>
+		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
- 		<script src="assets/map.js"></script> 		
+		  ga('create', 'UA-55384149-4', 'auto');
+		  ga('send', 'pageview');
+
+		</script>
+
+ 		<script src="assets/map.js"></script> 
  		<script src="assets/indicator.js"></script>
  		<script src="assets/infoWindow.js"></script>
  		<script src="assets/infoPanel.js"></script>
+ 		<script src="assets/chart.js"></script>
+ 		<script src="assets/siteResource.js"></script>
  		<script src="assets/site.js"></script>
+ 		<script src="assets/areaSite.js"></script>
 		<script src="assets/dataSource.js"></script>
-
- 		<!-- 
- 		<script src="assets/map/areaDisplay.js"></script> -->
  		
- 		<script>
-		var sites = [];		
+ 		<script>	
 		$("#map").on('mapBootCompelete', function(){
 			DataSource.boot();
 		});
 
 		$("#map").on("dataSourceLoadCompelete", function(e, source, data){
+			sitesTools.removeAll();
+			var i = 0;
+			var siteGroups = [];
 			data.map(function(item){
 				var site = new Site(item);
-				site.createMarker();
+				if( site.isValid() ){ 
+					setTimeout(function(){
+						site.createMarker(); 
+					}, i * 30);
+					i++;
+
+					//collect SiteGroup
+					var SiteGroup = site.getProperty('SiteGroup');
+					if( SiteGroup.length && siteGroups.indexOf(SiteGroup) == -1 ){
+						siteGroups.push(SiteGroup);
+					}					
+				}
+
+				//var areaSite = new AreaSite(item);
+				// if( areaSite.isValid() ){ 
+				// 	areaSite.createMarker(); 
+				// }
 			});
+
+			sitesTools.generateSiteGroupSelector(siteGroups);
 		});
 			
-		$(function(){	
-			Map.boot();
+		$(function(){
+			var optionsLatLng = getUrlLatLng();
+			var options = optionsLatLng ? {center: optionsLatLng, zoom:18} : {};
+			Map.boot(options);
 			Indicator.boot();
 			InfoPanel.boot();
-			// areaDisplay.boot();
+			// GeoJson.boot();
 		})
+
+		function getUrlLatLng(){
+			var param = location.href.replace(location.protocol + '//' + location.host + '/', '');
+
+			if(param.indexOf('@') > -1){
+				var latLng = param.replace('@', '').split(',', 2);
+				return {
+					lat: parseFloat(latLng.shift()),
+					lng: parseFloat(latLng.shift()),
+				}
+			}
+
+			return null;
+		}
 		</script>
 	</body>
 </html>

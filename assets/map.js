@@ -10,7 +10,7 @@ var Map = {
 			position: google.maps.ControlPosition.TOP_RIGHT
 		},
 		center: {lat: 23.839775, lng: 121.062213},
-		zoom: 8
+		zoom: 7
 	},
 	dataLayerDefaultStyle: {
 		strokeWeight: 1,
@@ -31,20 +31,24 @@ var Map = {
 
 		return this.Geocoder;
 	},
-	boot: function(){
+	boot: function(overwrite){
+		var options = this.mapOptions;
+		if(overwrite){ $.extend(options, overwrite); }
+		
 		this.instance = new google.maps.Map(
 			document.getElementById(this.mapContainerID), 
-			this.mapOptions);
+			options);
 
 		this.instance.data.setStyle(this.dataLayerDefaultStyle);
 
-		this.addUserLocationButton(this.instance);
+		// this.addUserLocationButton(this.instance);
 
 		$(this.getMapElement()).trigger("mapBootCompelete");
 	},
 	loadGeoJson: function(json){
+		var self = this;
 		this.getMapInstance().data.loadGeoJson(json, null, function(features){
-			$(this.getMapElement).trigger("GeoJsonLoaded", [features]);
+			$(self.getMapElement()).trigger("GeoJsonLoaded", [features]);
 		});
 		return this;
 	},
@@ -69,17 +73,8 @@ var Map = {
 			}
 		);
 	},
-	getFeatureByKeyword: function(keyword){
-		var features = [];
-		this.getMapInstance().data.forEach(function(feature){
-			var regionName = feature.getProperty('C_Name') + feature.getProperty('T_Name');
-			var re = new RegExp(keyword, 'g');
-
-			if( regionName.match(re) !== null ){
-				features.push(feature);					
-			}
-		});
-		return features;
+	getFeatures: function(keyword){
+		return this.getMapInstance().data;
 	},
 	setFeatureStyle: function(features, styles){
 		var self = this;
@@ -98,9 +93,11 @@ var Map = {
 		this.getMapInstance().data.revertStyle();
 		return this;
 	},
-	addUserLocationButton: function(){
+	addUserLocationButton: function(map){
+		if(!navigator.geolocation) {
+			return ;
+		}
 
-		var map = this.getMapInstance();
 		var controlDiv = document.createElement('div');
 		
 		var firstChild = document.createElement('button');
@@ -164,6 +161,3 @@ var Map = {
 		map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(controlDiv);
 	}
 }
-
-// google.maps.event.addDomListener(window, 'load', function(){  });
-// 
