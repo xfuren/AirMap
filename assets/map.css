@@ -70,7 +70,7 @@ html, body{
 	height:100%; 
 	margin:0; 
 	overflow-x: hidden;
-	background: #B3D1FF;
+	background: #232F3A;
 	font-family: 'Noto Sans TC', sans-serif;
 }
 
@@ -91,5 +91,73 @@ html, body{
 	position:fixed;
 	top:0.5em; left:0.5em;
 	z-index:2;
-	width:200px;
+	width:170px;
 }
+#siteLogo img{
+	filter: drop-shadow(0px 0px 3px #fff) drop-shadow(0px 0px 5px #fff);
+	-webkit-filter: drop-shadow(0px 0px 3px #fff) drop-shadow(0px 0px 5px #fff);
+}
+
+#navigator{ 
+	position: absolute; 
+	top:2.5em; left:1em; 
+	width:2em; 
+	z-index:2; 
+	opacity: 0.8;
+}
+#navigator > .btn{
+	padding: 5px 8px;
+	margin-top: 0.3em;
+	overflow: hidden;
+}
+.navigator{ 
+	background: #fff;
+	min-width: 8.5em;
+	min-height: 5em;
+	position: absolute;
+	border-radius: 8px;
+	padding:10px;
+	font-size: 0.7em;
+}
+.navigator > div{
+	margin: 0 auto;
+}
+.navigator > .header {	
+	text-align: center;
+	font-size: 1.1em;
+	border-bottom: 1px solid #eee;
+	margin-bottom: 10px;
+	padding-bottom: 5px;
+}
+.navigator > .glyphicon{
+	position: absolute;
+	left: -10px;
+	top: 10px;
+	display: block;
+	color: #fff;
+}
+
+#windLayerCtrl{
+	max-width: 15em;
+}
+#windLayerCtrl .msg{
+	text-align: center;
+}
+#windLayerCtrl .switch{
+	text-align: center;
+}
+#windLayerCtrl label{
+	font-weight: normal;
+	font-size: 0.9em;
+}
+#windLayerCtrl .slider{
+	width: 90%;
+	margin: 0 5px;
+}
+#windLayerCtrl .help-block{
+	margin-left: 1.2em;
+	text-indent: -0.6em ;
+	font-size: 0.9em;
+}
+
+#about{ min-width: 25em; }

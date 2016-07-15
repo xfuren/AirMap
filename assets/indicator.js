@@ -76,8 +76,8 @@ var Indicator = {
 		this.generateTypeBtn();
 		this.generateLevelBar();
 
-		$(this.typeBtnContainerID)
-			.on('click', '.btn', function(e){
+		$("body")
+			.on('click', this.typeBtnContainerID + ' .btn', function(e){
 				var type = $(e.target).data('type');
 
 				this.changeType(type);
@@ -91,7 +91,6 @@ var Indicator = {
 		var html = '';
 		this.types.map(function(type){
 			var active = type == this.presentType ? 'btn-primary' : 'btn-default';
-			
 			html += $("<div/>").append(
 				$('<button type="button" class="btn btn-sm"></button')
 					.text(this.displayName[type])

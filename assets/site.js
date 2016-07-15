@@ -10,30 +10,34 @@ var sitesTools = {
 	},
 	activeSiteGroup: undefined,
 	generateSiteGroupSelector: function(siteGroups){
-		if( !siteGroups.length ){ return; }		
+		if( !siteGroups ){ return; }		
 		var $container = $("#siteGroupSelector");
 
 		//initial
 		if( this.activeSiteGroup == undefined ){
 			this.activeSiteGroup = 'all'
 
-			$container.on('click', '.btn', function(e){
-				$container.find('.btn').removeClass('btn-success').addClass('btn-default');
-				$(e.target).addClass('btn-success');
-
+			$("body").on('click', '#siteGroupSelector .btn', function(e){
 				var group = $(e.target).data('group');
+
+				$("#siteGroupSelector .btn").removeClass('btn-success').addClass('btn-default')
+					.filter("[data-group='" + group + "']").addClass('btn-success');	
+
 				this.changeSiteGroup(group);
 			}.bind(this));
 		}
-		
-		var html = '<button type="button" class="btn btn-sm btn-success" data-group="all">ALL</button>';
-		siteGroups.map(function(siteGroup){			
+		var html = '';
+		var totalCount = 0;
+		for(var name in siteGroups){
+			var count = siteGroups[name];
+			totalCount += count;
 			html += $("<div/>").append(
 				$('<button type="button" class="btn btn-sm btn-default"></button')
-					.text(siteGroup)
-					.attr('data-group', siteGroup)
+					.html(name + ' <code>' + count + '</code>')
+					.attr('data-group', name)
 			).html();
-		}.bind(this));
+		}
+		html = '<button type="button" class="btn btn-sm btn-success" data-group="all">ALL <code>' + totalCount + '</code></button>' + html;
 
 		$container.html(html);
 	},

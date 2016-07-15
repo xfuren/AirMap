@@ -1,5 +1,5 @@
 application: taiwan-airmap
-version: 1-6
+version: 2
 runtime: php55
 api_version: 1
 threadsafe: yes
@@ -28,6 +28,9 @@ handlers:
   mime_type: application/json
   static_files: static/\1
   upload: static/(.*\.json)
+
+- url: /about
+  script: public/about.php
 
 - url: /site
   script: public/site.php

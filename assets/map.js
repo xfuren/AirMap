@@ -4,13 +4,15 @@ var Map = {
 	mapContainerID: "map",
 	mapOptions: {
 		streetViewControl: false,
-		mapTypeControl: true,
+		mapTypeControl: false,
 		mapTypeControlOptions: {
 			style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
 			position: google.maps.ControlPosition.TOP_RIGHT
 		},
 		center: {lat: 23.839775, lng: 121.062213},
-		zoom: 7
+		zoom: 7,
+		// https://snazzymaps.com/style/12999/%C4%B0nturlam-style
+		styles: [{"featureType":"all","elementType":"all","stylers":[{"invert_lightness":true},{"saturation":20},{"lightness":50},{"gamma":0.4},{"hue":"#00ffee"}]},{"featureType":"all","elementType":"geometry","stylers":[{"visibility":"simplified"}]},{"featureType":"all","elementType":"labels","stylers":[{"visibility":"on"}]},{"featureType":"administrative","elementType":"all","stylers":[{"color":"#ffffff"},{"visibility":"simplified"}]},{"featureType":"administrative.land_parcel","elementType":"geometry.stroke","stylers":[{"visibility":"simplified"}]},{"featureType":"landscape","elementType":"all","stylers":[{"color":"#405769"}]},{"featureType":"water","elementType":"geometry.fill","stylers":[{"color":"#232f3a"}]}],
 	},
 	dataLayerDefaultStyle: {
 		strokeWeight: 1,
