@@ -1,6 +1,9 @@
 var sites = [];
 
 var sitesTools = {
+	add: function(site){
+		sites.push(site);
+	},
 	removeAll: function(){
 		for(var i in sites){
 			var site = sites[i];
@@ -9,8 +12,20 @@ var sitesTools = {
 		sites = [];
 	},
 	activeSiteGroup: undefined,
-	generateSiteGroupSelector: function(siteGroups){
-		if( !siteGroups ){ return; }		
+	generateSiteGroupSelector: function(){		
+		var siteGroups = {};
+		for(var i in sites){
+			var site = sites[i];
+
+			var siteGroup = site.getProperty('SiteGroup');
+			if( siteGroup.length ){
+				if(!siteGroups[siteGroup]){
+					siteGroups[siteGroup] = 0;
+				}
+				siteGroups[siteGroup]++;
+			}
+		}
+
 		var $container = $("#siteGroupSelector");
 
 		//initial
@@ -52,6 +67,21 @@ var sitesTools = {
 			}			
 		}
 	},
+	generateVoronoiLocationsAndColors: function(){
+		var locations = [];
+		var colors = [];
+		for(var i in sites){
+			var site = sites[i];
+
+			var LatLng = site.getPosition();
+			locations[i] = [LatLng.lat(), LatLng.lng()];
+			colors[i] = site.getMeasureColor();
+		}
+		return {
+			locations: locations,
+			colors: colors,
+		}		
+	}
 }
 
 function Site(data){
@@ -70,8 +100,8 @@ function Site(data){
 }
 
 Site.prototype.setProperties = function(item){
-	if( !item.Data || !item.Data.Create_at ){
-		return;
+	if( !item || !item.Data || !item.Data.Create_at ){
+		return false;
 	}
 
 	this.property = item;
@@ -119,6 +149,11 @@ Site.prototype.getMeasure = function(measureType){
 	return null;
 };
 
+Site.prototype.getIdentity = function(){
+	var identify = this.getProperty('SiteGroup') + '-' + this.getResource().getIdentity();
+	return identify.replace(/[_\.]/, '-');
+}
+
 Site.prototype.getTitle = function(){
 	return '[' + this.getProperty('SiteGroup') + '] ' + this.getProperty('SiteName');
 }
@@ -145,11 +180,17 @@ Site.prototype.getIconSVG = function(){
 	var $markerIcon = document.querySelector('.markerIcon');
 	var iconSvg = $markerIcon.innerHTML || '';
 
+
+	var measureType = Indicator.getPresentType();
+	var text = this.getMeasure(measureType) ? Math.round(this.getMeasure(measureType)) : '';
 	var color = this.getMeasureColor();
+
 	if( !color ){ return; }
 
 	var url = 'data:image/svg+xml;charset=utf-8,' + 
-			   encodeURIComponent( iconSvg.replace('{{background}}', color) );
+			   encodeURIComponent( 
+			     iconSvg.replace('{{background}}', color).replace('{{text}}', text)
+			   );
 	return {
 		anchor: new google.maps.Point(16, 16),
 		url: url,
@@ -181,8 +222,6 @@ Site.prototype.createMarker = function(options){
 	google.maps.event.addListener(this.marker, 'click', function(){
 		self.openInfoWindow();
 	});
-
-	sites.push(this);
 }
 
 Site.prototype.getMarker = function(){

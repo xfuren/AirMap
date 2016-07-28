@@ -88,7 +88,7 @@ html, body{
 }
 
 #siteLogo{
-	position:fixed;
+	position:absolute;
 	top:0.5em; left:0.5em;
 	z-index:2;
 	width:170px;
@@ -98,18 +98,55 @@ html, body{
 	-webkit-filter: drop-shadow(0px 0px 3px #fff) drop-shadow(0px 0px 5px #fff);
 }
 
+#geoLocate{
+	margin: 0 0 -5px 10px;
+}
+#geoLocate > button{
+	background-color: #fff;
+    border: medium none;
+    border-radius: 2px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    height: 28px;
+    margin-right: 10px;
+    outline: medium none;
+    padding: 0;
+    width: 28px;
+}
+#geoLocate .icon-gps{
+	background-image: url("https://maps.gstatic.com/tactile/mylocation/mylocation-sprite-1x.png");
+    background-position: 0 0;
+    background-repeat: no-repeat;
+    background-size: 180px 18px;
+    height: 18px;
+    margin: 5px;
+    width: 18px;
+}
+#geoLocate .icon-gps.gps-located{
+	background-position: -144px 0;
+}
+#geoLocate .icon-gps.gps-unlocate{
+	background-position: -18px 0;
+}
+
+
 #navigator{ 
 	position: absolute; 
-	top:2.5em; left:1em; 
+	top:2.5em; left:10px; 
 	width:2em; 
 	z-index:2; 
 	opacity: 0.8;
 }
 #navigator > .btn{
-	padding: 5px 8px;
-	margin-top: 0.3em;
+	padding: 4px 7px;
+	margin-top: 0.2em;
 	overflow: hidden;
 }
+#navigator > .btn .short{ display: inline; }
+#navigator > .btn .long{ display: none; }
+#navigator > .btn:hover .short{ display: none; }
+#navigator > .btn:hover .long{ display: inline; }
+
 .navigator{ 
 	background: #fff;
 	min-width: 8.5em;
@@ -161,3 +198,52 @@ html, body{
 }
 
 #about{ min-width: 25em; }
+
+#disqus_panel{
+	position: absolute;
+	top:0; right: 0;
+	width:310px;
+	height:calc(100% - 8em);
+	padding: 10px;
+	padding-right: 5px;
+	margin: 10px;
+	background: #fff;
+	border-radius: 5px;
+	display: none;
+	z-index: 3;
+}
+#disqus_panel .close{ margin-right: 5px; }
+#disqus_panel .title{ 
+	font-size: 0.8em; 
+	overflow: hidden; 
+	white-space: nowrap; 
+	margin-bottom: 5px; 
+}
+#disqus_thread{ 
+	height: calc(100% - 1.2em); 
+	overflow-y: auto; 
+	padding-right:10px; 
+}
+
+.SvgOverlay {
+	position: absolute;
+	width: 900px;
+	height: 600px;
+	display: none;
+}
+
+.SvgOverlay svg {
+	position: absolute;
+	top: -4000px;
+	left: -4000px;
+	width: 8000px;
+	height: 8000px; 
+	opacity: 0.5;
+    /*background-color: #000;*/
+}
+
+.SvgOverlay svg path{
+	opacity:0.5;
+	stroke: white;
+	stroke-width: 3;
+}

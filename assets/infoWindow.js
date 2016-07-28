@@ -54,6 +54,15 @@ var InfoWindow = {
 		return this._getTbody(this.item.getProperty('RawData'));
 	},
 	getContent: function(){
-		return this.item.getTitle();
+		return [
+			this.item.getTitle(),
+			'<br/>',
+			'<a class="disqus-comment-section">',
+				'<span class="glyphicon glyphicon-comment"></span>&nbsp;',
+				'<span class="disqus-comment-count" data-disqus-identifier="',
+				this.item.getIdentity(),
+				'">0 Comments</span>',
+			'</a>'
+		].join('');
 	}
 }

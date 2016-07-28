@@ -13,9 +13,10 @@ var WindLayer = {
 	property: {
 		ctrlContainer: "#windLayerCtrl",
 		fillOpacity: 0.6,
-		moveSpeed: 1,
+		moveSpeed: 10,
 		windyData: {},
-		gfsJson: "https://asper.tw/airmap/gfs.json",
+		// gfsJson: "https://cdn.rawgit.com/Aspertw/AirMap/master/static/gfs.json",
+		gfsJson: "https://raw.githubusercontent.com/Aspertw/AirMap/master/static/gfs.json",
 	},	
 	boot: function(){
 		var $switchContainer = $(this.property.ctrlContainer).find(".switch");
@@ -113,6 +114,7 @@ var WindLayer = {
 			var map_size_y = $map.height();
 
 			this.instance.windy.params.fillOpacity = this.property.fillOpacity;
+			this.instance.windy.params.moveSpeed = this.property.moveSpeed;
 			this.instance.windy.start(
 				[
 					[0,0], 

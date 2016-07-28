@@ -22,32 +22,33 @@ jsonResponse($sites);
 
 
 function fetchRemote($jsonType){
-	$prefix = "http://g0vairmap.3203.info/Data/";
+	$g0vPrefix = "http://g0vairmap.3203.info/Data/";
 
 	$sources = [
-		"ProbeCube_last.json",
-		// "EPA_last.json",
-		"LASS_last.json",
-		"Indie_last.json",
-		"Airbox_last.json",
-		"webduino_last.json",
+		// $g0vPrefix . "EPA_last.json",
+		$g0vPrefix . "ProbeCube_last.json",
+		$g0vPrefix . "LASS_last.json",
+		$g0vPrefix . "Indie_last.json",
+		$g0vPrefix . "Airbox_last.json",
+		$g0vPrefix . "webduino_last.json",
+		"http://taqm.g0v.asper.tw/airmap.json",
 	];	
 
 
 	$sites = [];
 	foreach($sources as $source){
-		$url = $prefix . $source;
+		$url = $source;
 
 		$response = file_get_contents($url);
 		$data = json_decode($response, true);
-
+		
 		if( !is_array($data) || !count($data) ){
 			continue;
 		}
 
 		foreach($data as $item){
 			if( !isset($item['Data']['Create_at']) ){ continue; }
-			
+
 			$valid = filterCreateAt($item['Data']['Create_at']);
 
 			if( $jsonType == 'airmap' && $valid ){

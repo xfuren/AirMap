@@ -4,15 +4,21 @@ var Map = {
 	mapContainerID: "map",
 	mapOptions: {
 		streetViewControl: false,
-		mapTypeControl: false,
+		mapTypeControl: true,
 		mapTypeControlOptions: {
 			style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-			position: google.maps.ControlPosition.TOP_RIGHT
+			position: google.maps.ControlPosition.TOP_RIGHT,
+			mapTypeIds: [google.maps.MapTypeId.ROADMAP, google.maps.MapTypeId.TERRAIN]
 		},
+		zoomControl: true,
+		zoomControlOptions: {
+			position: google.maps.ControlPosition.LEFT_BOTTOM
+		},
+		scaleControl: true,
 		center: {lat: 23.839775, lng: 121.062213},
 		zoom: 7,
 		// https://snazzymaps.com/style/12999/%C4%B0nturlam-style
-		styles: [{"featureType":"all","elementType":"all","stylers":[{"invert_lightness":true},{"saturation":20},{"lightness":50},{"gamma":0.4},{"hue":"#00ffee"}]},{"featureType":"all","elementType":"geometry","stylers":[{"visibility":"simplified"}]},{"featureType":"all","elementType":"labels","stylers":[{"visibility":"on"}]},{"featureType":"administrative","elementType":"all","stylers":[{"color":"#ffffff"},{"visibility":"simplified"}]},{"featureType":"administrative.land_parcel","elementType":"geometry.stroke","stylers":[{"visibility":"simplified"}]},{"featureType":"landscape","elementType":"all","stylers":[{"color":"#405769"}]},{"featureType":"water","elementType":"geometry.fill","stylers":[{"color":"#232f3a"}]}],
+		styles: [{"featureType":"all","elementType":"all","stylers":[{"invert_lightness":true},{"saturation":20},{"lightness":50},{"gamma":0.4},{"hue":"#00ffee"}]},{"featureType":"all","elementType":"geometry","stylers":[{"visibility":"simplified"}]},{"featureType":"all","elementType":"labels","stylers":[{"visibility":"on"}]},{"featureType":"administrative","elementType":"all","stylers":[{"color":"#ffffff"},{"visibility":"simplified"}]},{"featureType":"administrative.land_parcel","elementType":"geometry.stroke","stylers":[{"visibility":"simplified"}]},{"featureType":"landscape","elementType":"all","stylers":[{"color":"#405769"}]},{"featureType":"water","elementType":"geometry.fill","stylers":[{"color":"#232f3a"}]}],		
 	},
 	dataLayerDefaultStyle: {
 		strokeWeight: 1,
@@ -39,11 +45,12 @@ var Map = {
 		
 		this.instance = new google.maps.Map(
 			document.getElementById(this.mapContainerID), 
-			options);
+			options
+		);
 
 		this.instance.data.setStyle(this.dataLayerDefaultStyle);
 
-		// this.addUserLocationButton(this.instance);
+		this.addUserLocationButton(this.instance);
 
 		$(this.getMapElement()).trigger("mapBootCompelete");
 	},
@@ -95,71 +102,82 @@ var Map = {
 		this.getMapInstance().data.revertStyle();
 		return this;
 	},
-	addUserLocationButton: function(map){
-		if(!navigator.geolocation) {
-			return ;
-		}
+	addUserLocationButton: function(map){				
+		var findZoomLevelByAccuracy = function(accuracy){
+			if( parseFloat(accuracy) <= 0 ){ return 12; }
+			//591657550.500000 / 2^(level-1)
+			var level = ( Math.log(591657550.500000/accuracy) / Math.log(2) ) + 1;
+			return Math.floor(level);
+		};
 
-		var controlDiv = document.createElement('div');
-		
-		var firstChild = document.createElement('button');
-		firstChild.style.backgroundColor = '#fff';
-		firstChild.style.border = 'none';
-		firstChild.style.outline = 'none';
-		firstChild.style.width = '28px';
-		firstChild.style.height = '28px';
-		firstChild.style.borderRadius = '2px';
-		firstChild.style.boxShadow = '0 1px 4px rgba(0,0,0,0.3)';
-		firstChild.style.cursor = 'pointer';
-		firstChild.style.marginRight = '10px';
-		firstChild.style.padding = '0px';
-		firstChild.title = 'Your Location';
-		controlDiv.appendChild(firstChild);
-		
-		var secondChild = document.createElement('div');
-		secondChild.style.margin = '5px';
-		secondChild.style.width = '18px';
-		secondChild.style.height = '18px';
-		secondChild.style.backgroundImage = 'url(https://maps.gstatic.com/tactile/mylocation/mylocation-sprite-1x.png)';
-		secondChild.style.backgroundSize = '180px 18px';
-		secondChild.style.backgroundPosition = '0px 0px';
-		secondChild.style.backgroundRepeat = 'no-repeat';
-		secondChild.id = 'you_location_img';
-		firstChild.appendChild(secondChild);
+		var $element = $([
+			"<div id='geoLocate'>",
+			"<button>", 
+			"<div class='icon-gps'></div>",
+			"</button>",
+			"</div>"
+		].join(''));
+		var $icon = $element.find(".icon-gps");
 		
 		google.maps.event.addListener(map, 'dragend', function() {
-			$('#you_location_img').css('background-position', '0px 0px');
+			$icon.removeClass('gps-located gps-unlocate');
 		});
 
-		firstChild.addEventListener('click', function() {
-			var imgX = '0';
-			var animationInterval = setInterval(function(){
-				if(imgX == '-18') imgX = '0';
-				else imgX = '-18';
-				$('#you_location_img').css('background-position', imgX+'px 0px');
+		var animateInterval;
+		$element.find("button").click(function(){
+			if(animateInterval){				
+				$icon.removeClass('gps-located gps-unlocate');
+				clearInterval(animateInterval);
+				animateInterval = null;
+				return;
+			}
+
+			animateInterval = setInterval(function(){
+				if( $icon.hasClass('gps-unlocate') ){
+					$icon.removeClass('gps-unlocate');
+				}else{
+					$icon.addClass('gps-unlocate');
+				}
 			}, 500);
-			if(navigator.geolocation) {
-				navigator.geolocation.getCurrentPosition(function(position) {
-					var latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 
-					new google.maps.Marker({
-						'position': latlng,
-						'map': map,
-					});
+			var latlng = $icon.data('latlng');
+			var zoom = $icon.data('zoom');
+			if(latlng){
+				map.setCenter(latlng);
+				map.setZoom(zoom || 12);
+
+				$icon.removeClass('gps-unlocate').addClass('gps-located');
+				clearInterval(animateInterval);
+				animateInterval = null;
+				return; 
+			}
+
+			// var url = "http://ip-api.com/json";
+			var url = "https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyCDRRT8it4AZpwbORhHeqoi2qrWDmQqD48";
+			$.ajax({
+				dataType: 'json',
+				method: 'POST',
+				url: url
+			}).success(function(data){
+				$icon.removeClass('gps-located gps-unlocate');
+				
+				if( data.location.lat && data.location.lng ){
+					latlng = new google.maps.LatLng(data.location.lat, data.location.lng);
+					zoom = findZoomLevelByAccuracy(data.accuracy);
+					
 					map.setCenter(latlng);
-					map.setZoom(12);
+					map.setZoom(zoom);
 
-					clearInterval(animationInterval);
-					$('#you_location_img').css('background-position', '-144px 0px');
-				});
-			}
-			else{
-				clearInterval(animationInterval);
-				$('#you_location_img').css('background-position', '0px 0px');
-			}
+					$icon.data('latlng', latlng).data('zoom', zoom).addClass('gps-located');
+				}
+			}).complete(function(){
+				clearInterval(animateInterval);
+				animateInterval = null;
+			});	
 		});
 		
+		var controlDiv = $element[0];
 		controlDiv.index = 1;
-		map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(controlDiv);
+		map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(controlDiv);
 	}
 }
