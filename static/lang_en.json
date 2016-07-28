@@ -1,0 +1,38 @@
+{
+    "token": {
+		"站": "S",
+		"測站篩選": "Site Filter",
+		"量": "M",
+		"量測類別": "Measure Type",
+		"風": "W",
+		"風力線": "Wind Layer",
+		"勢": "V",
+		"勢力地圖": "Voronoi Diagram",
+		"表": "T",
+		"測站列表": "Sites Table",
+		"意見回饋": "Comment",
+		"關於": "About",
+		"過去一小時歷史數值": "Last hour chart",
+		"過去一天歷史數值": "Last day chart",
+		"過去一週歷史數值": "Last week chart",
+		"過去一個月歷史數值": "Last month chart",
+		"站點詳細資訊": "Site detail data page",
+		"濕度": "RH",
+		"溫度": "Temp",
+		"更新時間": "Last update",
+		"點選站點取得詳細資料": "Please click site to get detail.",
+		"本零時空汙觀測網僅彙整公開資料提供視覺化參考，並不對資料數據提供保證，實際測值以各資料來源為準。": "This map provide visualize from public data, do not guarantee data accuracy.",
+		"開啟": "On",
+		"關閉": "Off",
+		"線條亮度": "Wind opacity",
+		"移動速度": "Wing flow speed",
+		"風力線十分消耗資源，容易造成瀏覽器當機，請斟酌使用。": "Wind layer consume lots resources, easy to cause browser crash. at your discretion.",
+		"資料時間": "Last update time",
+		"半整點更新資料": "update at half clock",
+		"有效站點": "Valid Sites",
+		"過期站點": "Overdue Sites"
+	},
+    "regex": [
+        
+    ]
+}

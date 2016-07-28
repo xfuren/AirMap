@@ -129,6 +129,12 @@ html, body{
 	background-position: -18px 0;
 }
 
+#lang{
+	position: absolute;
+	right:10px;
+	top: 10px;
+	z-index: 2;
+}
 
 #navigator{ 
 	position: absolute; 
@@ -141,6 +147,7 @@ html, body{
 	padding: 4px 7px;
 	margin-top: 0.2em;
 	overflow: hidden;
+	min-width: 30px;
 }
 #navigator > .btn .short{ display: inline; }
 #navigator > .btn .long{ display: none; }

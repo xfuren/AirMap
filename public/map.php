@@ -53,7 +53,7 @@
 
 		<div id="info-panel">
 			<div class="manual">
-				<center>點選站點取得詳細資料</center>
+				<center lang="zh-tw">點選站點取得詳細資料</center>
 			</div>
 
 			<div class="content">
@@ -71,14 +71,14 @@
 						</div>
 						<div class="measure humidity">
 							<div class="header">
-								<div class="type">濕度</div>
+								<div class="type" lang="zh-tw">濕度</div>
 								<div class="unit">%</div>
 							</div>
 							<div class='value'>55.55</div>
 						</div>
 						<div class="measure temperature">
 							<div class="header">
-								<div class="type">溫度</div>
+								<div class="type" lang="zh-tw">溫度</div>
 								<div class="unit">&#8451;</div>
 							</div>
 							<div class='value'>55.44</div>
@@ -109,22 +109,22 @@
 							</span>
 						</a>
 						<div id="chart-control">
-							<span class="btn btn-darker btn-xs" data-range="Hourly" title="過去一小時歷史數值">
+							<span class="btn btn-darker btn-xs" data-range="Hourly" lang="zh-tw" title="過去一小時歷史數值">
 								<span class="visible-xs-inline visible-sm-inline">H</span>
 								<span class="visible-md-inline visible-lg-inline">Hourly</span>
 							</span>
 
-							<span class="btn btn-darker btn-xs" data-range="Daily" title="過去一天歷史數值">
+							<span class="btn btn-darker btn-xs" data-range="Daily" lang="zh-tw" title="過去一天歷史數值">
 								<span class="visible-xs-inline visible-sm-inline">D</span>
 								<span class="visible-md-inline visible-lg-inline">Daily</span>
 							</span>
 
-							<span class="btn btn-darker btn-xs" data-range="Weekly" title="過去一週歷史數值">
+							<span class="btn btn-darker btn-xs" data-range="Weekly" lang="zh-tw" title="過去一週歷史數值">
 								<span class="visible-xs-inline visible-sm-inline">W</span>
 								<span class="visible-md-inline visible-lg-inline">Weekly</span>
 							</span>
 
-							<span class="btn btn-darker btn-xs" data-range="Monthly" title="過去一個月歷史數值">
+							<span class="btn btn-darker btn-xs" data-range="Monthly" lang="zh-tw" title="過去一個月歷史數值">
 								<span class="visible-xs-inline visible-sm-inline">M</span>
 								<span class="visible-md-inline visible-lg-inline">Monthly</span>
 							</span>
@@ -133,7 +133,7 @@
 
 					<div class="col-xs-6 resource-label">
 						<div class="detail">
-							<a href='#' target='_blank' class="btn btn-darker btn-xs" title="站點詳細資訊">
+							<a href='#' target='_blank' class="btn btn-darker btn-xs" lang="zh-tw" title="站點詳細資訊">
 								<span class="glyphicon glyphicon-list-alt"></span>
 								<span class="visible-md-inline visible-lg-inline">Site Detail</span>
 							</a>
@@ -147,7 +147,7 @@
 						<div class="updateTime">
 							<a href='#' target='_blank' class="btn btn-darker btn-xs">
 								<span class="glyphicon glyphicon-time"></span>
-								<span class="visible-md-inline visible-lg-inline">更新時間</span>
+								<span class="visible-md-inline visible-lg-inline" lang="zh-tw">更新時間</span>
 								<span class="time visible-md-inline visible-lg-inline"></span>
 							</a>
 						</div>
@@ -156,9 +156,7 @@
 			</div>
 
 			<div class="announcement">
-				<div>
-					本零時空汙觀測網僅彙整公開資料提供視覺化參考，並不對資料數據提供保證，實際測值以各資料來源為準。
-				</div>
+				<div lang="zh-tw">本零時空汙觀測網僅彙整公開資料提供視覺化參考，並不對資料數據提供保證，實際測值以各資料來源為準。</div>
 			</div>
 		</div>
 
@@ -172,59 +170,66 @@
 			<div class="msg"></div>
 			<p></p>
 			<div class="switch">
-				<button type="button" class="btn btn-block btn-warning btn-on">開啟</button>
-				<button type="button" class="btn btn-block btn-default btn-off" style="display: none;">關閉</button>
+				<button type="button" class="btn btn-block btn-warning btn-on" lang="zh-tw">開啟</button>
+				<button type="button" class="btn btn-block btn-default btn-off" style="display: none;" lang="zh-tw">關閉</button>
 			</div>
 			<p></p>
 				<div class="slider-container">
-					<label>線條亮度 <code class="value"></code></label>
-					<input type="text" class="form-control" data-type="fillOpacity" data-slider-min="1" data-slider-max="9" data-slider-step="1" title="線條亮度">
+					<label lang="zh-tw">線條亮度 <code class="value"></code></label>
+					<input type="text" class="form-control" data-type="fillOpacity" data-slider-min="1" data-slider-max="9" data-slider-step="1" lang="zh-tw" title="線條亮度">
 				</div>
 				<div class="slider-container">
-					<label>移動速度 <code class="value"></code></label>
-					<input type="text" class="form-control" data-type="moveSpeed" data-slider-min="1" data-slider-max="40" data-slider-step="1" data-slider-reversed=true title="移動速度">
+					<label lang="zh-tw">移動速度 <code class="value"></code></label>
+					<input type="text" class="form-control" data-type="moveSpeed" data-slider-min="1" data-slider-max="40" data-slider-step="1" data-slider-reversed=true lang="zh-tw" title="移動速度">
 				</div>
 			<p></p>
 			<div class="help-block">
-				<div><span class="glyphicon glyphicon-info-sign"></span> 地圖縮放等級<=4時，風力線因繪製異常會自動隱藏。</div>
-				<div><span class="glyphicon glyphicon-alert"></span> 風力線十分消耗資源，容易造成瀏覽器當機，請斟酌使用。</div>
+				<div>
+					<span class="glyphicon glyphicon-alert"></span>
+					<span lang="zh-tw">風力線十分消耗資源，容易造成瀏覽器當機，請斟酌使用。</span>
+				</div>
 				<div id="refTime" style="display:none">
 					<span class="glyphicon glyphicon-time"></span>
-					資料時間: <span class="localTime"></span> UTC+8 
-					(5, 11, 17, 23半整點更新資料)
+					<span lang="zh-tw">資料時間</span>: <span class="localTime"></span> UTC+8 
+					(5, 11, 17, 23 <span lang="zh-tw">半整點更新資料</span>)
 				</div>
 			</div>
 		</div>
+
+		<div id="lang">
+			<button type="button" data-lang="zh-tw" class="btn btn-success btn-sm">中</button>
+			<button type="button" data-lang="en" class="btn btn-success btn-sm">En</button>
+		</div>
 		
 		<div id="navigator">
-			<button type="button" class="btn btn-default" title="測站篩選" data-content-container='#siteGroupSelector'>
-				<span class="short">站</span>
-				<span class="long">測站篩選</span>
+			<button type="button" class="btn btn-default" lang="zh-tw" title="測站篩選" data-content-container='#siteGroupSelector'>
+				<span class="short" lang="zh-tw">站</span>
+				<span class="long" lang="zh-tw">測站篩選</span>
 			</button>
-			<button type="button" class="btn btn-default" title="量測類別" data-content-container='#indicateTypeSelector'>
-				<span class="short">量</span>
-				<span class="long">量測類別</span>
+			<button type="button" class="btn btn-default" lang="zh-tw" title="量測類別" data-content-container='#indicateTypeSelector'>
+				<span class="short" lang="zh-tw">量</span>
+				<span class="long" lang="zh-tw">量測類別</span>
 			</button>
-			<button type="button" class="btn btn-default" title="風力線" data-content-container='#windLayerCtrl'>
-				<span class="short">風</span>
-				<span class="long">風力線</span>
+			<button type="button" class="btn btn-default" lang="zh-tw" title="風力線" data-content-container='#windLayerCtrl'>
+				<span class="short" lang="zh-tw">風</span>
+				<span class="long" lang="zh-tw">風力線</span>
 			</button>
-			<button type="button" class="voronoi btn btn-default" title="勢力地圖 Voronoi Diagram">
-				<span class="short">勢</span>
-				<span class="long">勢力地圖</span>
+			<button type="button" class="voronoi btn btn-default" lang="zh-tw" title="勢力地圖">
+				<span class="short" lang="zh-tw">勢</span>
+				<span class="long" lang="zh-tw">勢力地圖</span>
 			</button>
-			<a class="btn btn-default" title="測站列表" href='/site'>
-				<span class="short">表</span>
-				<span class="long">測站列表</span>
+			<a class="btn btn-default" lang="zh-tw" title="測站列表" href='/site'>
+				<span class="short" lang="zh-tw">表</span>
+				<span class="long" lang="zh-tw">測站列表</span>
 			</a>
 			<button type="button" class="comment btn btn-default" title="Leave a Comment">
 				<span class="glyphicon glyphicon-comment"></span>
-				<span class="long">Comment</span>
+				<span class="long" lang="zh-tw">意見回饋</span>
 			</button>
 			<a class="btn btn-default" target="_blank" title="About" href='/about'>
 				<span class="glyphicon glyphicon-info-sign"></span>
-				<span class="long">About</span>
-			</a>	
+				<span class="long" lang="zh-tw">關於</span>
+			</a>
 		</div>
 
 		<div id="disqus_panel">
@@ -240,11 +245,14 @@
 		<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.12.0/moment.min.js"></script>
 		<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.12.0/locale/zh-tw.js"></script>
 		<script src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.0.1/Chart.bundle.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.2/js.cookie.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-lang-js/3.0.0/jquery-lang.min.js"></script>
 		<script src="//d3js.org/d3.v3.min.js"></script>
 		<script src="//airmap.disqus.com/count.js" id="dsq-count-scr" async></script>
 		<script src="assets/windy.js"></script>
 		<script src="assets/CanvasLayer.js"></script>
-
+		
+		<script src="assets/lang.js"></script>
 		<script src="assets/map.js"></script> 
 		<script src="assets/indicator.js"></script>
 		<script src="assets/infoWindow.js"></script>
