@@ -257,5 +257,39 @@
 		<script src="assets/windLayer.js"></script>
 		<script src="assets/voronoiOverlap.js"></script>
 		<script src="assets/map-main.js"></script>
+
+		<script>
+			var emissions = [];
+			$.getJSON("json/emission.json").success(function(sites){
+				var mapInstance = Map.getMapInstance();
+				var locations = [];
+				var image = {
+					url: 'image/emission.png',
+					// This marker is 20 pixels wide by 32 pixels high.
+					size: new google.maps.Size(30, 30),
+					// The origin for this image is (0, 0).
+					origin: new google.maps.Point(0, 0),
+					// The anchor for this image is the base of the flagpole at (0, 32).
+					anchor: new google.maps.Point(0, 30),
+					scaledSize: new google.maps.Size(20, 20),
+				};
+
+				sites.map(function(site){
+					locations.push([site.latitude, site.longitude]);
+					var maker = new google.maps.Marker({
+						title: site.name,
+						map: mapInstance,
+						icon: image,
+						position: new google.maps.LatLng(site.latitude, site.longitude),
+					})
+				});
+
+				var EmissionLayer = new VoronoiOverlap('emissionVoronoi', mapInstance, locations, {});
+				setTimeout(function(){
+					$("#emissionVoronoi").fadeIn(500);
+				}, 500);
+			})
+
+		</script>
 	</body>
 </html>

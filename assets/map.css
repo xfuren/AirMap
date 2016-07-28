@@ -247,3 +247,14 @@ html, body{
 	stroke: white;
 	stroke-width: 3;
 }
+
+#emissionVoronoi{
+	z-index: 2;
+}
+#emissionVoronoi svg{
+	opacity: 1;
+}
+#emissionVoronoi svg path{
+	stroke: #FE8100;
+	stroke-width: 2;
+}
