@@ -15,6 +15,9 @@ function getSiteResource(site){
 	var lass = function(){
 		var deviceID = site.getProperty('SiteName');
 		
+		var getIdentity = function(){
+			return site.getProperty('RawData')['device_id'];
+		};
 		var getLastestData = function(cb){
 			var url = "http://nrl.iis.sinica.edu.tw/LASS/last.php?device_id=:id";
 			url = url.replace(':id', deviceID);
@@ -71,6 +74,7 @@ function getSiteResource(site){
 
 		return {
 			jsonLink: "http://nrl.iis.sinica.edu.tw/LASS/history-hourly.php?device_id=" + deviceID,
+			getIdentity: getIdentity,
 			getLastestData: getLastestData,
 			getRangeData: getRangeData,
 			chartDataTransform: chartDataTransform,
@@ -80,6 +84,10 @@ function getSiteResource(site){
 	var airbox = function(){
 		var deviceID = site.getProperty('RawData')['device_id'];
 		var momentFormat = 'x';
+
+		var getIdentity = function(){
+			return site.getProperty('RawData')['device_id'];
+		};
 		var getLastestData = function(cb){
 			var allDeviceLastMessageUrl = "http://airbox.asuscloud.com/airbox/messages/";
 
@@ -131,6 +139,7 @@ function getSiteResource(site){
 		};
 		return {
 			jsonLink: "http://airbox.asuscloud.com/airbox/device/" + deviceID,
+			getIdentity: getIdentity,
 			getLastestData: getLastestData,
 			getRangeData: getRangeData,
 			chartDataTransform: chartDataTransform,
@@ -143,6 +152,9 @@ function getSiteResource(site){
 		var momentFormat = "YYYY-MM-DD HH:mm:SS";
 		var fieldMapping = {};
 
+		var getIdentity = function(){
+			return site.getProperty('RawData')['entry_id'];
+		};
 		var parsefieldMapping = function(channelInfo){
 			for(var index in channelInfo){
 				if( index.indexOf('field') < 0 ){ continue; }
@@ -201,6 +213,7 @@ function getSiteResource(site){
 
 		return {
 			jsonLink: "http://api.thingspeak.com/channels/" + channelID,
+			getIdentity: getIdentity,
 			getLastestData: getLastestData,
 			getRangeData: getRangeData,
 			chartDataTransform: chartDataTransform,
@@ -223,6 +236,7 @@ function getSiteResource(site){
 		jsonLink: resource.jsonLink,
 		getLastestData: resource.getLastestData,
 		getRangeData: resource.getRangeData,
+		getIdentity: resource.getIdentity,
 		getHourlyData: function(cb){
 			return resource.getRangeData('hours', cb);
 		},

@@ -11,6 +11,7 @@ var InfoPanel = {
 
 		$mapElement.on("infoWindowReady", function(e, site){
 			self.showItem(site);
+			$("#chart-control .btn[data-range]").removeClass('active');
 		});
 
 		$mapElement.on("infoWindowClose", function(e, site){
@@ -21,7 +22,9 @@ var InfoPanel = {
 			$(this).siblings().removeClass('active').end()
 				   .addClass('active');
 			
-			$(".loading").show();
+
+			$("#info-panel .chart-section").show();
+			$("#info-panel .loading").show();
 
 			var range = $(this).data('range');			
 			var resource = self.site.getResource();
@@ -31,7 +34,7 @@ var InfoPanel = {
 					var chartData = resource.getChartData(data);
 					LineChart.start(chartData);
 
-					$(".loading").hide();
+					$("#info-panel .loading").hide();
 				});
 
 				$(".chart-datasource").attr('href', resourceUrl);
@@ -80,8 +83,8 @@ var InfoPanel = {
 			.find('.content').show().end()
 			.find('.manual').hide().end();
 
-		//load chart
-		$("#chart-control .btn[data-range]:first").click();
+		//load chart	
+		$("#info-panel .chart-section").hide();
 
 		if(cb) cb();
 	},

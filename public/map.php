@@ -43,6 +43,7 @@
 					</filter>
 				</defs>
 				<circle r="30" stroke="#FFFFFF" stroke-width="1" fill="{{background}}" filter="url(#dropshadow)"/>
+				<text x="0" y="13" fill="#232F3A" text-anchor="middle" style="font-size:30px; font-weight: bolder;">{{text}}</text>
 			</svg>
 		</div>
 	
@@ -181,48 +182,68 @@
 				</div>
 				<div class="slider-container">
 					<label>移動速度 <code class="value"></code></label>
-					<input type="text" class="form-control" data-type="moveSpeed" data-slider-min="1" data-slider-max="20" data-slider-step="1" data-slider-reversed=true title="移動速度">
+					<input type="text" class="form-control" data-type="moveSpeed" data-slider-min="1" data-slider-max="40" data-slider-step="1" data-slider-reversed=true title="移動速度">
 				</div>
 			<p></p>
 			<div class="help-block">
 				<div><span class="glyphicon glyphicon-info-sign"></span> 地圖縮放等級<=4時，風力線因繪製異常會自動隱藏。</div>
 				<div><span class="glyphicon glyphicon-alert"></span> 風力線十分消耗資源，容易造成瀏覽器當機，請斟酌使用。</div>
-				<div id="refTime" style="display:none"><span class="glyphicon glyphicon-time"></span>資料時間: <span class="localTime"></span></div>
+				<div id="refTime" style="display:none">
+					<span class="glyphicon glyphicon-time"></span>
+					資料時間: <span class="localTime"></span> UTC+8 
+					(5, 11, 17, 23半整點更新資料)
+				</div>
 			</div>
 		</div>
 		
 		<div id="navigator">
 			<button type="button" class="btn btn-default" title="測站篩選" data-content-container='#siteGroupSelector'>
-				<span class="glyphicon glyphicon-filter"></span>
+				<span class="short">站</span>
+				<span class="long">測站篩選</span>
 			</button>
 			<button type="button" class="btn btn-default" title="量測類別" data-content-container='#indicateTypeSelector'>
-				<span class="glyphicon glyphicon-dashboard"></span>
+				<span class="short">量</span>
+				<span class="long">量測類別</span>
 			</button>
 			<button type="button" class="btn btn-default" title="風力線" data-content-container='#windLayerCtrl'>
-				<span class="glyphicon glyphicon-cloud"></span>
+				<span class="short">風</span>
+				<span class="long">風力線</span>
 			</button>
-			<a class="btn btn-default" title="About" href='/about'>
-				<span class="glyphicon glyphicon-info-sign"></span>
+			<button type="button" class="voronoi btn btn-default" title="勢力地圖 Voronoi Diagram">
+				<span class="short">勢</span>
+				<span class="long">勢力地圖</span>
+			</button>
+			<a class="btn btn-default" title="測站列表" href='/site'>
+				<span class="short">表</span>
+				<span class="long">測站列表</span>
 			</a>
+			<button type="button" class="comment btn btn-default" title="Leave a Comment">
+				<span class="glyphicon glyphicon-comment"></span>
+				<span class="long">Comment</span>
+			</button>
+			<a class="btn btn-default" target="_blank" title="About" href='/about'>
+				<span class="glyphicon glyphicon-info-sign"></span>
+				<span class="long">About</span>
+			</a>	
 		</div>
 
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/7.1.0/bootstrap-slider.min.js"></script>		
-		<script src="https://maps.google.com/maps/api/js?key=AIzaSyBfhb3bOt_jBPFN2WDzkhX8k518Yc7CLBw"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.12.0/moment.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.12.0/locale/zh-tw.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.0.1/Chart.bundle.js"></script>
+		<div id="disqus_panel">
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<div class="title"></div>
+			<div id="disqus_thread"></div>
+		</div>
+
+		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/7.1.0/bootstrap-slider.min.js"></script>		
+		<script src="//maps.google.com/maps/api/js?key=AIzaSyBfhb3bOt_jBPFN2WDzkhX8k518Yc7CLBw"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.12.0/moment.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.12.0/locale/zh-tw.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.0.1/Chart.bundle.js"></script>
+		<script src="//d3js.org/d3.v3.min.js"></script>
+		<script src="//airmap.disqus.com/count.js" id="dsq-count-scr" async></script>
 		<script src="assets/windy.js"></script>
 		<script src="assets/CanvasLayer.js"></script>
-		<script>
-		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-		  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-		  ga('create', 'UA-55384149-4', 'auto');
-		  ga('send', 'pageview');
-		</script>
 
 		<script src="assets/map.js"></script> 
 		<script src="assets/indicator.js"></script>
@@ -231,106 +252,10 @@
 		<script src="assets/chart.js"></script>
 		<script src="assets/siteResource.js"></script>
 		<script src="assets/site.js"></script>
-		<script src="assets/areaSite.js"></script>
+		<!-- <script src="assets/areaSite.js"></script> -->
 		<script src="assets/dataSource.js"></script>
 		<script src="assets/windLayer.js"></script>
-		<script>		
-		//navigator button show content
-		$("#navigator > .btn[data-content-container]").click(function(){
-			var container = $(this).data("content-container");
-			if(!container){ return false; }
-			
-			var contentID = container + '-content';
-			//exist, toogle show/hide
-			if( $(contentID).size() ){ 
-				$(".navigator").not(contentID).hide();
-				$(contentID).toggle();
-				return;
-			}
-
-			//add one
-			
-			//fine content, 
-			if( !$(container).size() ){ return false; }
-			$(".navigator").hide();
-			var $content = $(container).detach().css('display', 'block');
-			if($content.has('typeSelector')){
-				$content.css({
-					position: 'static',
-					opacity: 1,
-				});
-			}
-
-			//put to body
-			var position = $(this).offset();
-			var contentStyles = {				
-				top: position.top,
-				left: position.left + 45,
-			};
-			var html = [
-				"<div class='navigator'>",
-					"<span class='glyphicon glyphicon-triangle-left'></span>",
-					"<div class='header'>" + $(this).attr("title") + "</div>",
-				"</div>",
-			].join('');
-			$(html)
-				.attr('id', contentID.replace('#',''))
-				.css(contentStyles)
-				.append($content)
-				.appendTo("body");
-		})
-
-		$("#map").on('mapBootCompelete', function(){
-			DataSource.boot();
-		});
-
-		$("#map").on("dataSourceLoadCompelete", function(e, source, data){
-			sitesTools.removeAll();
-			var i = 0;
-			var siteGroups = {};
-			data.map(function(item){
-				var site = new Site(item);
-				if( site.isValid() ){ 
-					setTimeout(function(){
-						site.createMarker(); 
-					}, i * 30);
-					i++;
-
-					//collect SiteGroup
-					var SiteGroup = site.getProperty('SiteGroup');
-					if( SiteGroup.length ){
-						if(!siteGroups[SiteGroup]){
-							siteGroups[SiteGroup] = 0;
-						}
-						siteGroups[SiteGroup]++;
-					}					
-				}
-			});
-			sitesTools.generateSiteGroupSelector(siteGroups);
-		});
-			
-		$(function(){
-			var optionsLatLng = getUrlLatLng();
-			var options = optionsLatLng ? {center: optionsLatLng, zoom:18} : {};
-			Map.boot(options);
-			Indicator.boot();
-			InfoPanel.boot();
-			WindLayer.boot();
-		})
-
-		function getUrlLatLng(){
-			var param = location.href.replace(location.protocol + '//' + location.host + '/', '');
-
-			if(param.indexOf('@') > -1){
-				var latLng = param.replace('@', '').split(',', 2);
-				return {
-					lat: parseFloat(latLng.shift()),
-					lng: parseFloat(latLng.shift()),
-				}
-			}
-
-			return null;
-		}
-		</script>
+		<script src="assets/voronoiOverlap.js"></script>
+		<script src="assets/map-main.js"></script>
 	</body>
 </html>

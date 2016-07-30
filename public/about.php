@@ -79,10 +79,6 @@
 					<th></th>
 					<td></td>
 				</tr>
-				<tr class="seprate">
-					<th></th>
-					<td></td>
-				</tr>
 				<tr>
 					<th>Wind Layer</th>
 					<td></td>
@@ -106,6 +102,26 @@
 				<tr>
 					<th class="sub">weather data converter</th>
 					<td><a href="https://github.com/cambecc/grib2json">cambecc/grib2json</a></td>
+				</tr>
+				<tr class="seprate">
+					<th></th>
+					<td></td>
+				</tr>
+				<tr>
+					<th>Voronoi Diagram</th>
+					<td></td>
+				</tr>
+				<tr>
+					<th></th>
+					<td><a href="http://nrl.iis.sinica.edu.tw/LASS/GIS/voronoi/voronoi.html">LASS: Voronoi Diagram of PM2.5 Stations</a></td>
+				</tr>
+				<tr>
+					<th></th>
+					<td><a href="http://bl.ocks.org/shimizu/5610671">GoogleMap Voronoi Diagram</a></td>
+				</tr>
+				<tr>
+					<th></th>
+					<td><a href="blog.infographics.tw/2015/06/voronoi-with-d3js/">D3.JS 入門系列 － Voronoi Diagram 教學</a></td>
 				</tr>
 				<tr class="seprate">
 					<th></th>

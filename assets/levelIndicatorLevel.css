@@ -1,7 +1,7 @@
 #levelIndicatorLevel{
 	position:absolute;
 	bottom:4em; 
-	right:3em;
+	right:10px;
 	z-index:2;
 	opacity: 0.8;
 	height: 2em;
