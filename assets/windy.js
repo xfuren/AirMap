@@ -12,7 +12,7 @@
 */
 
 var Windy = function( params ){
-  var VELOCITY_SCALE = 1/70000;             // scale for wind velocity (completely arbitrary--this value looks nice)
+  var VELOCITY_SCALE = 1/200000;             // scale for wind velocity (completely arbitrary--this value looks nice)
   var INTENSITY_SCALE_STEP = 10;            // step size of particle intensity color scale
   var MAX_WIND_INTENSITY = 40;              // wind velocity at which particle intensity is maximum (m/s)
   var MAX_PARTICLE_AGE = 100;                // max number of frames a particle is drawn before regeneration
@@ -27,6 +27,10 @@ var Windy = function( params ){
 
   var τ = 2 * Math.PI;
   var H = Math.pow(10, -5.2);
+
+  var FADE_FILL_OPACITY = 0.9;
+  var MOVING_SPEED = 1;
+
 
   // interpolation for vectors like wind (u,v,m)
   var bilinearInterpolateVector = function(x, y, g00, g10, g01, g11) {
@@ -258,13 +262,42 @@ var Windy = function( params ){
 
 
   var project = function( lat, lon, windy) { // both in radians, use deg2rad if neccessary
+    
+    if(windy.east < windy.west){
+    	var padding = 0;
+    	var east = rad2deg(windy.east);
+    	var west = rad2deg(windy.west);
+    	var lngRange = 360 + east - west;
+
+    	if(lon > 0){	//west
+    		var westPercent = (180 - west) / lngRange;
+    		var newWidth = windy.width * westPercent;
+    		east = 180;
+    	}
+
+    	if(lon < 0){	//east
+    		var eastPercent = (180 + east) / lngRange;
+    		var newWidth = windy.width * eastPercent;
+    		west = -180;
+    		padding = windy.width * (1 - eastPercent);
+    	}
+
+    	windy.width = newWidth;
+    	windy.west = deg2rad(west);
+    	windy.east = deg2rad(east);
+
+    	var xFactor = newWidth / ( east - west );
+    	var x = padding + (lon - west) * xFactor;    	
+    }else{
+    	var xFactor = windy.width / ( windy.east - windy.west );
+    	var x = (deg2rad(lon) - windy.west) * xFactor;
+    }	
+
     var ymin = mercY(windy.south);
     var ymax = mercY(windy.north);
-    var xFactor = windy.width / ( windy.east - windy.west );
     var yFactor = windy.height / ( ymax - ymin );
 
     var y = mercY( deg2rad(lat) );
-    var x = (deg2rad(lon) - windy.west) * xFactor;
     var y = (ymax - y) * yFactor; // y points south
     return [x, y];
   };
@@ -277,10 +310,9 @@ var Windy = function( params ){
 
     var columns = [];
     var x = bounds.x;
-
     function interpolateColumn(x) {
         var column = [];
-        for (var y = bounds.y; y <= bounds.yMax; y += 2) {
+        for (var y = bounds.y; y <= bounds.yMax; y += 2) {                
                 var coord = invert( x, y, extent );
                 if (coord) {
                     var λ = coord[0], φ = coord[1];
@@ -326,18 +358,18 @@ var Windy = function( params ){
     function windIntensityColorScale(step, maxWind) {
 
         result = [
-          /* blue to red
-          "rgba(" + hexToR('#178be7') + ", " + hexToG('#178be7') + ", " + hexToB('#178be7') + ", " + 0.5 + ")",
-          "rgba(" + hexToR('#8888bd') + ", " + hexToG('#8888bd') + ", " + hexToB('#8888bd') + ", " + 0.5 + ")",
-          "rgba(" + hexToR('#b28499') + ", " + hexToG('#b28499') + ", " + hexToB('#b28499') + ", " + 0.5 + ")",
-          "rgba(" + hexToR('#cc7e78') + ", " + hexToG('#cc7e78') + ", " + hexToB('#cc7e78') + ", " + 0.5 + ")",
-          "rgba(" + hexToR('#de765b') + ", " + hexToG('#de765b') + ", " + hexToB('#de765b') + ", " + 0.5 + ")",
-          "rgba(" + hexToR('#ec6c42') + ", " + hexToG('#ec6c42') + ", " + hexToB('#ec6c42') + ", " + 0.5 + ")",
-          "rgba(" + hexToR('#f55f2c') + ", " + hexToG('#f55f2c') + ", " + hexToB('#f55f2c') + ", " + 0.5 + ")",
-          "rgba(" + hexToR('#fb4f17') + ", " + hexToG('#fb4f17') + ", " + hexToB('#fb4f17') + ", " + 0.5 + ")",
-          "rgba(" + hexToR('#fe3705') + ", " + hexToG('#fe3705') + ", " + hexToB('#fe3705') + ", " + 0.5 + ")",
-          "rgba(" + hexToR('#ff0000') + ", " + hexToG('#ff0000') + ", " + hexToB('#ff0000') + ", " + 0.5 + ")"
-          */
+          /* blue to red*/
+          // "rgba(" + hexToR('#178be7') + ", " + hexToG('#178be7') + ", " + hexToB('#178be7') + ", " + 0.5 + ")",
+          // "rgba(" + hexToR('#8888bd') + ", " + hexToG('#8888bd') + ", " + hexToB('#8888bd') + ", " + 0.5 + ")",
+          // "rgba(" + hexToR('#b28499') + ", " + hexToG('#b28499') + ", " + hexToB('#b28499') + ", " + 0.5 + ")",
+          // "rgba(" + hexToR('#cc7e78') + ", " + hexToG('#cc7e78') + ", " + hexToB('#cc7e78') + ", " + 0.5 + ")",
+          // "rgba(" + hexToR('#de765b') + ", " + hexToG('#de765b') + ", " + hexToB('#de765b') + ", " + 0.5 + ")",
+          // "rgba(" + hexToR('#ec6c42') + ", " + hexToG('#ec6c42') + ", " + hexToB('#ec6c42') + ", " + 0.5 + ")",
+          // "rgba(" + hexToR('#f55f2c') + ", " + hexToG('#f55f2c') + ", " + hexToB('#f55f2c') + ", " + 0.5 + ")",
+          // "rgba(" + hexToR('#fb4f17') + ", " + hexToG('#fb4f17') + ", " + hexToB('#fb4f17') + ", " + 0.5 + ")",
+          // "rgba(" + hexToR('#fe3705') + ", " + hexToG('#fe3705') + ", " + hexToB('#fe3705') + ", " + 0.5 + ")",
+          // "rgba(" + hexToR('#ff0000') + ", " + hexToG('#ff0000') + ", " + hexToB('#ff0000') + ", " + 0.5 + ")"
+
           "rgba(" + hexToR('#00ffff') + ", " + hexToG('#00ffff') + ", " + hexToB('#00ffff') + ", " + 0.5 + ")",
           "rgba(" + hexToR('#64f0ff') + ", " + hexToG('#64f0ff') + ", " + hexToB('#64f0ff') + ", " + 0.5 + ")",
           "rgba(" + hexToR('#87e1ff') + ", " + hexToG('#87e1ff') + ", " + hexToB('#87e1ff') + ", " + 0.5 + ")",
@@ -348,7 +380,20 @@ var Windy = function( params ){
           "rgba(" + hexToR('#e185ff') + ", " + hexToG('#e185ff') + ", " + hexToB('#e185ff') + ", " + 0.5 + ")",
           "rgba(" + hexToR('#ec6dff') + ", " + hexToG('#ec6dff') + ", " + hexToB('#ec6dff') + ", " + 0.5 + ")",
           "rgba(" + hexToR('#ff1edb') + ", " + hexToG('#ff1edb') + ", " + hexToB('#ff1edb') + ", " + 0.5 + ")"
-        ]
+        ];
+
+        var colors = ['#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF', '#B12802'];
+
+        var toRGBA = function(hex, opacity){
+        	opacity = opacity || 0.5;
+        	return "rgba(" + [hexToR(hex), hexToG(hex), hexToB(hex), opacity].join(',') + ")";
+        }
+
+        var result = [];
+        colors.map(function(color){
+        	result.push(toRGBA(color));
+        })
+
         /*
         var result = [];
         for (var j = 225; j >= 100; j = j - step) {
@@ -369,7 +414,7 @@ var Windy = function( params ){
       particleCount *= PARTICLE_REDUCTION;
     }
 
-    var fadeFillStyle = "rgba(0, 0, 0, " + (params.fillOpacity || "0.6") + ")";
+    var fadeFillStyle = "rgba(0, 0, 0, " + FADE_FILL_OPACITY + ")";
 
     var particles = [];
     for (var i = 0; i < particleCount; i++) {
@@ -395,7 +440,7 @@ var Windy = function( params ){
                 // var yt = y + v[1];
 
                 // modify by asper
-                var speedScale = params.moveSpeed || 1;
+                var speedScale = MOVING_SPEED;
                 var xt = x + v[0]/speedScale;
                 var yt = y + v[1]/speedScale;
 
@@ -457,76 +502,28 @@ var Windy = function( params ){
   }
 
   var start = function( bounds, width, height, extent ){
-  	var east = extent[1][0];
-  	var west = extent[0][0];
-  	if( (east + west) == 0 ){ return false; }
+  	if( (extent[1][0] + extent[0][0]) == 0 ){ return false; }	//-180~180 means repeat x
 
-  	var areas = [];
-
-  	if( east < west ){
-  		var lngRange = 360 + east - west;	//west >0, east <0, (180-west) + (180+east)
-  		
-  		var westPercent = (180 - west) / lngRange;
-  		var eastPercent = (180 + east) / lngRange;
-
-  		var area = {
-  			mapBounds: {
-  				south: deg2rad(extent[0][1]),
-  				north: deg2rad(extent[1][1]),
-  				east: deg2rad(extent[1][0]),
-  				west: deg2rad(extent[0][0]),
-  				width: width,
-  				height: height
-  			},
-  			bounds: bounds,
-  			width: width,
-  			height: height,
-  		};
-
-  		//west to 180
-  		var westArea = JSON.parse(JSON.stringify(area));
-  		westArea.mapBounds.east = deg2rad(180);
-  		westArea.mapBounds.width = width * westPercent;
-  		westArea.bounds[1][0] = bounds[1][0] * westPercent;
-  		westArea.width = width * westPercent;
-  		areas.push(westArea);
-
-  		//east to -180
-  		// var eastArea = JSON.parse(JSON.stringify(area));
-  		// eastArea.mapBounds.west = deg2rad(-179.99999);
-  		// eastArea.mapBounds.width = width * eastPercent;
-  		// eastArea.bounds[0][0] = bounds[0][0] + width * westPercent;
-  		// areas.push(eastArea);
-  	}else{
-  		areas.push({
-  			mapBounds: {
-  				south: deg2rad(extent[0][1]),
-  				north: deg2rad(extent[1][1]),
-  				east: deg2rad(extent[1][0]),
-  				west: deg2rad(extent[0][0]),
-  				width: width,
-  				height: height
-  			},
-  			bounds: bounds,
-  			width: width,
-  			height: height,
-  		});
-  	}
+  	var mapBounds = {
+		south: deg2rad(extent[0][1]),
+		north: deg2rad(extent[1][1]),
+		east: deg2rad(extent[1][0]),
+		west: deg2rad(extent[0][0]),
+		width: width,
+		height: height
+	}
 
     stop();
 
     // build grid
     buildGrid( params.data, function(grid){
       // interpolateField
-      areas.map(function(area){
-      	// console.dir(area);
-	    interpolateField( grid, buildBounds( area.bounds, area.width, area.height), area.mapBounds, function( bounds, field ){
+	    interpolateField( grid, buildBounds( bounds, width, height), mapBounds, function( bounds, field ){
 	      // animate the canvas with random points
 	      windy.field = field;
 	      animate( bounds, field );
 	    });
-      })
-    });
+    })
   };
 
   var stop = function(){
@@ -538,7 +535,18 @@ var Windy = function( params ){
   var windy = {
     params: params,
     start: start,
-    stop: stop
+    stop: stop,
+    setFillOpacity: function(opacity){
+    	if(+opacity <= 1 && +opacity >= 0){
+    		FADE_FILL_OPACITY = opacity;
+    		params.canvas.getContext("2d").fillStyle = "rgba(0, 0, 0, " + FADE_FILL_OPACITY + ")";
+    	}
+    },
+    setMovingSpeed: function(speed){
+    	if(+speed >= 1){
+    		MOVING_SPEED = +speed;
+    	}
+    }
   };
 
   return windy;

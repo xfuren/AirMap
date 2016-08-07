@@ -4,7 +4,7 @@ function getSiteResource(site){
 	
 	var ajaxRequest = function(url, param, cb){
 		if(jqXHR != null){ jqXHR.abort(); }
-
+		
 		jqXHR = $.getJSON(url, param, function(data){
 			if(cb) cb(data);
 		});
@@ -13,7 +13,7 @@ function getSiteResource(site){
 	}
 
 	var lass = function(){
-		var deviceID = site.getProperty('SiteName');
+		var deviceID = site.getProperty('RawData')['device_id'];
 		
 		var getIdentity = function(){
 			return site.getProperty('RawData')['device_id'];
@@ -147,9 +147,9 @@ function getSiteResource(site){
 	};
 
 	var thingspeak = function(){
-		var channelID = site.getProperty('Channel_id');
-		var apiUrl = "https://api.thingspeak.com/channels/:id/feeds.json".replace(':id', channelID);
-		var momentFormat = "YYYY-MM-DD HH:mm:SS";
+		var deviceID = site.getProperty('Channel_id') || site.getProperty('RawData')['device_id'].replace(/\D/g, '');	//replace prefix PC_XXXXXX
+		var apiUrl = "https://api.thingspeak.com/channels/:id/feeds.json".replace(':id', deviceID);
+		var momentFormat = "YYYY-MM-DD HH:mm:ss";
 		var fieldMapping = {};
 
 		var getIdentity = function(){
@@ -174,16 +174,25 @@ function getSiteResource(site){
 			});
 		};
 		var getRangeData = function(range, cb){
-			var param = {
-				start: moment().add(-1, range).format(momentFormat),
-				end: moment().format(momentFormat),
-				timezone: 'Asia/Taipei',
-			}
+			// var param = {
+			// 	start: moment().add(-1, range).format(momentFormat),
+			// 	end: moment().format(momentFormat),
+			// 	timezone: 'Asia/Taipei',
+			// }
+			//thingspeak api can't url encode
+			var param = [];
+			param.push('start=' + moment().add(-1, range).format(momentFormat));
+			param.push('end=' + moment().format(momentFormat));
+			param.push('timezone=Asia/Taipei');
 
-			return ajaxRequest(apiUrl, param, function(data){
+			var url = apiUrl + '?' + param.join('&');
+
+			ajaxRequest(url, function(data){
 				parsefieldMapping(data.channel);
 				if(cb) cb(data['feeds'] || {});
 			});
+
+			return url;
 		};
 		var chartDataTransform = function(feeds){
 			var xAxis = [];
@@ -212,7 +221,7 @@ function getSiteResource(site){
 		}		
 
 		return {
-			jsonLink: "http://api.thingspeak.com/channels/" + channelID,
+			jsonLink: "http://api.thingspeak.com/channels/" + deviceID,
 			getIdentity: getIdentity,
 			getLastestData: getLastestData,
 			getRangeData: getRangeData,
@@ -225,6 +234,7 @@ function getSiteResource(site){
 	switch(siteGroup){
 		case 'lass': 	resource = lass(); 		break;
 		case 'airbox': 	resource = airbox(); 	break;
+		case 'epa': 	return; 
 		
 		case 'probecube':
 		case 'miaoski':		

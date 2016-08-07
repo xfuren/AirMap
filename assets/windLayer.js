@@ -13,12 +13,12 @@ var WindLayer = {
 	property: {
 		ctrlContainer: "#windLayerCtrl",
 		fillOpacity: 0.6,
-		moveSpeed: 10,
+		moveSpeed: 1,
 		windyData: {},
-		// gfsJson: "https://cdn.rawgit.com/Aspertw/AirMap/master/static/gfs.json",
 		gfsJson: "https://raw.githubusercontent.com/Aspertw/AirMap/master/static/gfs.json",
 	},	
 	boot: function(){
+		//enable button event
 		var $switchContainer = $(this.property.ctrlContainer).find(".switch");
 		if( $switchContainer.size() ){ 
 			$switchContainer.find(".btn").click(function(){
@@ -33,14 +33,31 @@ var WindLayer = {
 					this.stop();
 				}
 			}.bind(this));
-		}		
+		}
+
+		var map = Map.getMapInstance();
+		google.maps.event.addListener(map, 'bounds_changed', function(){
+			this.clear();
+		}.bind(this));
+		google.maps.event.addListener(map, 'zoom_changed', function(){
+			var zoom = map.getZoom();
+			if( zoom <= 7 ){ this.changeMoveSpeed(1); return; }
+			if( zoom <= 8 ){ this.changeMoveSpeed(3); return; }
+			if( zoom <= 10 ){ this.changeMoveSpeed(5); return; }
+			if( zoom <= 11 ){ this.changeMoveSpeed(15); return; }
+			if( zoom <= 12 ){ this.changeMoveSpeed(30); return; }
+			if( zoom <= 13 ){ this.changeMoveSpeed(50); return; }
+			if( zoom <= 16 ){ this.changeMoveSpeed(120); return; }
+			if( zoom <= 17 ){ this.changeMoveSpeed(150); return; }
+			if( zoom >= 17 ){ this.changeMoveSpeed(200); return; }
+		}.bind(this));	
 	},
 	init: function(){
 		if( this.state.isInitiated ){ return; }
-		var map = Map.getMapInstance();
 
 		this.showMsg('Loading...');
 		$.getJSON(this.property.gfsJson)
+			//initial wind js
 			.success(function(result){
 				var canvasLayerOptions = {
 					map: Map.getMapInstance(),
@@ -53,22 +70,14 @@ var WindLayer = {
 				
 				this.property.windyData = result;
 				this.state.isLayerEnable = true;
+				this.state.isInitiated = true;	
 				this.instance.context = canvasLayer.canvas.getContext('2d');
 				this.instance.windy = new Windy({canvas: canvasLayer.canvas, data: result});					
-			}.bind(this))
-			.success(function(){
-				google.maps.event.addListener(map, 'bounds_changed', function(){
-					this.clear();
-				}.bind(this));
-
-				this.changeFillOpacity(0.4);
-				this.state.isInitiated = true;				
 			}.bind(this))
 			.success(function(result){
 				var dateTime = moment(result[0]['header']['refTime']).format("YYYY-MM-DD HH:mm");
 				$("#refTime").find(".localTime").text(dateTime).end().show();
 			});
-
 	},
 	showMsg: function(msg){
 		var $msgContainer = $(this.property.ctrlContainer).find(".msg");
@@ -88,7 +97,7 @@ var WindLayer = {
 		this.property.fillOpacity = opacity;
 		
 		if(this.state.isLayerEnable){
-			this.instance.windy.params.canvas.getContext('2d').fillStyle = "rgba(0, 0, 0, " + opacity + ")";
+			this.instance.windy.setFillOpacity(opacity);
 		}
 	},
 	getMoveSpeed: function(){
@@ -97,9 +106,14 @@ var WindLayer = {
 	changeMoveSpeed(speed){
 		if(!speed){ return false; }
 
+		$(this.property.ctrlContainer)
+			.find("[data-type='moveSpeed']")
+				.prevAll('label').find(".value").text(zoomSpeedFormat(speed)).end().end()
+				.slider().slider('setValue', speed);
+
 		this.property.moveSpeed = speed;
 		if(this.state.isLayerEnable){
-			this.instance.windy.params.moveSpeed = parseInt(speed, 10) || 1;
+			this.instance.windy.setMovingSpeed(speed);
 		}
 	},
 	redraw: function(overlay, params) {
@@ -113,7 +127,8 @@ var WindLayer = {
 			var map_size_x = $map.width();
 			var map_size_y = $map.height();
 
-			this.instance.windy.params.fillOpacity = this.property.fillOpacity;
+			this.instance.windy.setFillOpacity(this.property.fillOpacity);
+			this.instance.windy.setMovingSpeed(this.property.moveSpeed);
 			this.instance.windy.params.moveSpeed = this.property.moveSpeed;
 			this.instance.windy.start(
 				[
@@ -145,8 +160,10 @@ var WindLayer = {
 		this.clear();
 	},
 	clear: function(){
-		this.instance.windy.stop();
-		this.instance.context.clearRect(0,0,3000, 3000);
+		if( this.instance.windy ){
+			this.instance.windy.stop();
+			this.instance.context.clearRect(0,0,3000, 3000);
+		}
 	},
 };
 

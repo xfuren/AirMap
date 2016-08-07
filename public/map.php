@@ -43,7 +43,7 @@
 					</filter>
 				</defs>
 				<circle r="30" stroke="#FFFFFF" stroke-width="1" fill="{{background}}" filter="url(#dropshadow)"/>
-				<text x="0" y="13" fill="#232F3A" text-anchor="middle" style="font-size:30px; font-weight: bolder;">{{text}}</text>
+				<!-- <text x="0" y="13" fill="#232F3A" text-anchor="middle" style="font-size:30px; font-weight: bolder;">{{text}}</text> -->
 			</svg>
 		</div>
 	
@@ -180,7 +180,7 @@
 				</div>
 				<div class="slider-container">
 					<label lang="zh-tw">移動速度 <code class="value"></code></label>
-					<input type="text" class="form-control" data-type="moveSpeed" data-slider-min="1" data-slider-max="40" data-slider-step="1" data-slider-reversed=true lang="zh-tw" title="移動速度">
+					<input type="text" class="form-control" data-type="moveSpeed" data-slider-min="1" data-slider-max="200" data-slider-step="1" data-slider-reversed=true lang="zh-tw" title="移動速度">
 				</div>
 			<p></p>
 			<div class="help-block">
